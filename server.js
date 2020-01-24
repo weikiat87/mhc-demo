@@ -7,6 +7,7 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+//db setup
 mongoose
   .connect(process.env.DBURI, {
     useUnifiedTopology: true,
@@ -14,10 +15,13 @@ mongoose
   })
   .catch(err => console.error(err));
 
+// middlewares setup
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
+// for testing only
 app.get("/", (req, res) => res.send("Hello World!"));
 //app.use("/api",  routes);
 
