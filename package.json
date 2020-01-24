@@ -3,13 +3,18 @@
   "version": "1",
   "description": "Assessment from MHC",
   "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "repository": "git@github.com:weikiat87/mhc-demo.git",
   "author": "Wei Kiat",
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "bcrypt": "^3.0.7",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.8.9"
   }
 }
