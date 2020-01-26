@@ -7,7 +7,11 @@
     "start": "nodemon server.js"
   },
   "repository": "git@github.com:weikiat87/mhc-demo.git",
-  "author": "Wei Kiat",
+  "author": {
+    "name": "Wei Kiat",
+    "email": "lwk-dev@protonmail.com",
+    "url": "http://www.wk-dev.com"
+  },
   "license": "MIT",
   "private": true,
   "dependencies": {
