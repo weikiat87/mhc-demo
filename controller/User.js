@@ -1,10 +1,10 @@
-var UserController = require('../model/User');
+var UserModel = require('../model/User');
 
 
-const userController = {
+const UserController = {
     findUser: () => {
         return new Promise((resolve, reject) => {
-            UserController.find({}, (err, result) => {
+            UserModel.find({}, (err, result) => {
                 if (err) reject(err);
                 else resolve(result)
             })
@@ -14,4 +14,4 @@ const userController = {
 }
 
 
-module.exports = userController
+module.exports = UserController

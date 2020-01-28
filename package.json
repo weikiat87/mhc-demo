@@ -4,7 +4,8 @@
   "description": "Assessment from MHC",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "repository": "git@github.com:weikiat87/mhc-demo.git",
   "author": {
@@ -19,6 +20,8 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "helmet": "^3.21.2",
     "mongoose": "^5.8.9"
   }
 }

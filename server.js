@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const routes = require('./routes');
+const helment = require('helmet');    // for security
+const session = require('express-session');
+
 require("dotenv").config();
 
 //const routes = require('./routes');
@@ -12,7 +15,8 @@ const port = process.env.PORT || 3000;
 mongoose
   .connect(process.env.DBURI, {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: false
   })
 
 // some logs to check
@@ -29,6 +33,7 @@ mongoose.connection.on("error", function(err) {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(helment());
 
 
 // for testing only
