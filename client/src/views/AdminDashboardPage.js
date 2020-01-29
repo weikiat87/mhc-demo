@@ -4,16 +4,16 @@ import Table from "react-bootstrap/Table";
 import Popup from "../components/PopupModal";
 
 const AdminDashboardPage = props => {
-  const [data, setData] = useState([]);
-
+  const [eventData, setEventData] = useState([]);
+  const adminid = "5e31a58e9c4a4c4a24ca3639";
   useEffect(() => {
     const getData = async () => {
-      return fetch(`events/`).then(response => response.json());
+      return fetch(`/api/events/admin/${adminid}`).then(response => response.json());
     };
-    getData().then(result => setData(result));
+    getData().then(result => setEventData(result));
   }, []);
 
-  console.log(data);
+  console.log(eventData);
 
   return (
     <div>
@@ -30,13 +30,13 @@ const AdminDashboardPage = props => {
           </tr>
         </thead>
         <tbody>
-          {data.map(item => (
+          {eventData.map(item => (
             <tr key={item._id}>
-              <td>{item.eventName}</td>
-              <td>{item.createdBy.name}</td>
+              <td>{item.eventType.name}</td>
+              <td>{item.vendor.username}</td>
               <td>
                 {item.confirmDate === undefined
-                  ? `${item.proposedDate[0]} ${item.proposedDate[1]} ${item.proposedDate[2]}`
+                  ? `${item.proposedDate[0]}|${item.proposedDate[1]}|${item.proposedDate[2]}`
                   : item.confirmDate}
               </td>
               <td>{item.status}</td>

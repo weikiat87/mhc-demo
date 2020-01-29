@@ -1,24 +1,17 @@
 const EventModel = require("../model/Event");
 
-// status for events (added 1 more called reject)
-const status = {
-  pending: "pending",
-  approved: "approved",
-  reject: "rejected"
-};
-
 //Event Business Logic 
 const EventController = {
   createEvent: data => {
     return new Promise((resolve, reject) => {
       EventModel.create({
-        eventName: data.eventName,
+        eventType: data.eventType,
         createdBy: {
-          name: data.name
+          user: data.user
         },
+        vendor: data.vendor,
         proposedDate: data.proposedDate,
-        location: data.location,
-        status: status.pending
+        location: data.location
       })
         .then(result => {
           console.log(result);
@@ -38,7 +31,16 @@ const EventController = {
   },
   findEventByVendor: data => {
     return new Promise((resolve, reject) => {
-      EventModel.find({ "createdBy.name": data })
+      EventModel.find({ "vendor": data })
+        .then(result => resolve(result))
+        .catch(err => reject(err));
+    });
+  },
+  findEventByAdmin: data => {
+    return new Promise((resolve, reject) => {
+      EventModel.find({ "createdBy.user": data })
+      .populate('eventType','name')
+      .populate('vendor','username')
         .then(result => resolve(result))
         .catch(err => reject(err));
     });
@@ -52,11 +54,11 @@ const EventController = {
   },
   updateEvent: (id, updateData) => {
     if (updateData.remark === undefined) {
-      updateData.status = status.approved;
+      updateData.status = 'APPROVED';
       updateData.$unset = { remark: 1 };
       // updateData.$unset = { remark: 1, proposedDate: 1 }; // if we want to remove the date as well
     } else {
-      updateData.status = status.reject;
+      updateData.status = 'REJECTED';
       updateData.$unset = { confirmDate: 1 }
       // updateData.$unset = { confirmDate: 1, proposedDate: 1 }; // if we want to remove the date as well
     }

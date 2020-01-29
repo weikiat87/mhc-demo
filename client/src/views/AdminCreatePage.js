@@ -1,32 +1,67 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { Button, Col, Form } from "react-bootstrap";
 import { useHistory } from 'react-router-dom'
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const AdminDashboardPage = props => {
-  // event type can be ported to backend api if needed
-  const eventTypes = ["Health Talk", "Onsite Screening", "Event 3", "Event 4"]
-  const history = useHistory();
+const AdminCreatePage = props => {
+  // states for create page
+  const [vendorData, setVendorData] = useState([]);
   const [dates, setDates] = useState([new Date(), new Date(), new Date()]);
-  const [validated, setValidated] = useState(false);
-  const [event, setEvent] = useState(eventTypes[0]);
+  const [eventType, setEventType] = useState([]);
+  const history = useHistory();
 
+  // get vendor data from backend
+  useEffect(() => {
+    const getData = () => {
+      return fetch(`/api/vendors`)
+        .then(response => response.json());
+    };
+    getData().then(result => setVendorData(result));
+  }, []);
+  // get event type data from backend
+  useEffect(() => {
+    const getData = () => {
+      return fetch(`/api/eventtypes`)
+        .then(response => response.json());
+    };
+    getData().then(result => setEventType(result));
+  }, []);
+
+  // date handler
   const updateDates = (date, index) => {
     let datesCopy = [...dates]
     datesCopy[index] = date;
     setDates(datesCopy);
   }
 
-  const handleFormSubmit = target => {
-    let form = target.currentTarget;
-    console.log(form)
-    if (form.checkValidity() === false) {
-      target.preventDefault();
-      target.stopPropagation();
+  const handleFormSubmit = event => {
+    const form = event.currentTarget;
+    let data = {
+      eventType: eventType.find(item => item.name === form.EventName.value)._id,
+      user: "5e317713c85def4a244d40e6",   // TODO: need to get hr admin id
+      vendor: vendorData.find(item => item.username === form.VendorName.value)._id,
+      proposedDate: [dates[0].toJSON(), dates[1].toJSON(), dates[2].toJSON()],
+      location: form.EventLocation.value
     }
-    setValidated(true)
+
+    console.log( JSON.stringify(data))
+
+    event.preventDefault();
+    event.stopPropagation();
+    //Handle Create new Event
+    let res = fetch('/api/events/create', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(response => response.json())
+      .then(json => { return json })
+      .catch(err => console.error(err))
+      
+    res.then(
+      result => console.log(result)
+    )
   }
 
   return (
@@ -34,46 +69,45 @@ const AdminDashboardPage = props => {
       <h1>
         Admin Create
         </h1>
-      <Form noValidate validated={validated} onSubmit={handleFormSubmit} >
-        <Form.Group controlId="CompanyName">
-          <Form.Label>Company Name</Form.Label>
-          <Form.Control required disabled defaultValue="HR Company" />
-          <Form.Text>Auto Generated Company Name</Form.Text>
+      <Form onSubmit={handleFormSubmit} >
+        <Form.Group controlId="VendorName">
+          <Form.Label>Vendor Name</Form.Label>
+          <Form.Control as="select" >
+            {vendorData.map((val, index) => (
+              <option key={index}>{val.username}</option>
+            ))}
+          </Form.Control>
+          <Form.Text>Select Vendor to Tag</Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="Dates">
+        <Form.Group controlId="EventDates">
           <Form.Row>
             <Form.Label>Proposed Dates</Form.Label>
             {dates.map((date, index) => (
-              <Col key={`${date}_${index}`} >
-                <DatePicker selected={date} onChange={newDate => updateDates(newDate, index)}></DatePicker>
+              <Col key={`${date}_${index}`}>
+                <Form.Control as={DatePicker} selected={date} onChange={newDate => updateDates(newDate, index)}>
+                </Form.Control>
               </Col>
             ))}
 
           </Form.Row>
         </Form.Group>
-        <Form.Row>
-          <Form.Group as={Col} controlId="Events Name">
-
+        <Form.Group as={Col} controlId="EventName">
+          <Form.Row>
             <Form.Label>Event Name</Form.Label>
-            <Form.Control as="select" onChange={option => {
-              setEvent(option.currentTarget.value)
-            }}>
-              {eventTypes.map((val, index) => (
-                <option key={index}>{val}</option>
+            <Form.Control as="select">
+              {eventType.map((val, index) => (
+                <option key={index}>{val.name}</option>
               ))}
             </Form.Control>
-          </Form.Group>
+          </Form.Row>
+        </Form.Group>
 
-          <Form.Group required as={Col} controlId="Location">
-
-            <Form.Label>Event Location</Form.Label>
-            <Form.Control required as="input" onChange={option => {
-              console.log(option.currentTarget.value)
-            }}>
-            </Form.Control>
-          </Form.Group>
-        </Form.Row>
+        <Form.Group required as={Col} controlId="EventLocation">
+          <Form.Label>Event Location</Form.Label>
+          <Form.Control required as="input">
+          </Form.Control>
+        </Form.Group>
 
         <Form.Row>
 
@@ -98,4 +132,4 @@ const AdminDashboardPage = props => {
   );
 };
 
-export default AdminDashboardPage;
+export default AdminCreatePage;

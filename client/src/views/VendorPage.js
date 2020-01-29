@@ -8,7 +8,7 @@ const VendorDashboardPage = props => {
 
   useEffect(() => {
     const getData = async () => {
-      return fetch(`events/vendor/vendor2`).then(response => response.json());
+      return fetch(`/api/events/vendor/vendor2`).then(response => response.json());
     };
     getData().then(result => setData(result));
   }, []);

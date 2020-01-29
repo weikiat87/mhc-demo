@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 const cors = require("cors");
 const mongoose = require("mongoose");
 const routes = require('./routes');
@@ -34,12 +35,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helment());
-
+app.use(express.static(path.join(__dirname, 'client/build')))
 
 // for testing only
 app.get("/", (req, res) => res.send("Hello World!"));
 app.use("/api", routes);
 
+// Handles any requests that don't match the ones above
+// app.get('*', (req,res) =>{
+//   console.log(req.path)
+//   res.sendFile(path.join(__dirname+'/client/build/index.html'));
+// });
 app.listen(port, () => {
   console.log(`server started ${port}`);
 });

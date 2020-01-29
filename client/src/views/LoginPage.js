@@ -2,24 +2,28 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 const LoginPage = props => {
+
+  const handleLogin = (e) => {
+    const [username,password] = e.target.elements
+    console.log(username, password)
+    e.preventDefault();
+  }
+
   return (
     <div>
         <h1>
             Login Page
         </h1>
-      <Form>
-        <Form.Group controlId="formBasicUsername">
+      <Form onSubmit={handleLogin}>
+        <Form.Group controlId="formUserName">
           <Form.Label>Username</Form.Label>
-          <Form.Control placeholder="Enter Username" />
+          <Form.Control required placeholder="Enter Username" />
           <Form.Text></Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="formBasicPassword">
+        <Form.Group controlId="formPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
-        </Form.Group>
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
+          <Form.Control required type="password" placeholder="Password" />
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit
