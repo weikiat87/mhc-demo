@@ -4,16 +4,16 @@ import Table from "react-bootstrap/Table";
 import Popup from "../components/PopupModal";
 
 const VendorDashboardPage = props => {
-  const [data, setData] = useState([]);
-
+  const [eventData, setEventData] = useState([]);
+  const vendorid = "5e32540bd2927a4ae4f9b68a"; // Placeholder
   useEffect(() => {
-    const getData = async () => {
-      return fetch(`/api/events/vendor/vendor2`).then(response => response.json());
+    const getData = () => {
+      return fetch(`/api/events/vendor/${vendorid}`).then(response => response.json());
     };
-    getData().then(result => setData(result));
+    getData().then(result => setEventData(result));
   }, []);
 
-  console.log(data);
+  console.log(eventData);
 
   return (
     <div>
@@ -22,7 +22,7 @@ const VendorDashboardPage = props => {
         <thead>
           <tr>
             <th>Event Name</th>
-            <th>Vendor Name</th>
+            <th>Admin Name</th>
             <th>Event Dates</th>
             <th>Status</th>
             <th>Date Created</th>
@@ -30,13 +30,13 @@ const VendorDashboardPage = props => {
           </tr>
         </thead>
         <tbody>
-          {data.map(item => (
+          {eventData.map(item => (
             <tr key={item._id}>
-              <td>{item.eventName}</td>
-              <td>{item.createdBy.name}</td>
+              <td>{item.eventType.name}</td>
+              <td>{item.createdBy.user.username}</td>
               <td>
                 {item.confirmDate === undefined
-                  ? `${item.proposedDate[0]} ${item.proposedDate[1]} ${item.proposedDate[2]}`
+                  ? `${item.proposedDate[0]}|${item.proposedDate[1]}|${item.proposedDate[2]}`
                   : item.confirmDate}
               </td>
               <td>{item.status}</td>

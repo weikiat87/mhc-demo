@@ -5,9 +5,9 @@ import Popup from "../components/PopupModal";
 
 const AdminDashboardPage = props => {
   const [eventData, setEventData] = useState([]);
-  const adminid = "5e31a58e9c4a4c4a24ca3639";
+  const adminid = "5e325380d2927a4ae4f9b688"; // Placeholder
   useEffect(() => {
-    const getData = async () => {
+    const getData = () => {
       return fetch(`/api/events/admin/${adminid}`).then(response => response.json());
     };
     getData().then(result => setEventData(result));

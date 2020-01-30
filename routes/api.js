@@ -1,26 +1,32 @@
 const express = require('express')
 const router = express.Router()
-const eventController = require('./controller/Event');
-const eventTypeController = require('./controller/EventType');
-const userController = require('./controller/User');
+const eventController = require('../controller/Event');
+const eventTypeController = require('../controller/EventType');
+const userController = require('../controller/User');
 
 
+const isAuth = (req, res, next) => {
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated()) return next();
+  };
+  
+  
 
 /// routes for EVENT TYPE request
-router.get("/eventtypes", (req, res) => {
+router.get("/eventtypes",isAuth, (req, res) => {
     eventTypeController.findEventType()
         .then((result) => res.json(result))
         .catch(err => res.send(err))
 })
 
-router.post("/eventtypes/create", (req, res) => {
+router.post("/eventtypes/create",isAuth, (req, res) => {
     eventTypeController.createEventType(req.body)
         .then(result => res.json(result))
         .catch(err => res.send(err))
 })
 
 /// routes for EVENT request
-router.get("/events", (req, res) => {
+router.get("/events", isAuth, (req, res) => {
     eventController.findEvent()
         .then((result) => {
             console.log(result)
@@ -28,7 +34,7 @@ router.get("/events", (req, res) => {
         })
 })
 
-router.get("/events/vendor/:id", (req, res) => {
+router.get("/events/vendor/:id", isAuth, (req, res) => {
     console.log(req.params.id)
     eventController.findEventByVendor(req.params.id)
         .then((result) => {
@@ -40,7 +46,7 @@ router.get("/events/vendor/:id", (req, res) => {
 
 
 
-router.get("/events/admin/:id", (req, res) => {
+router.get("/events/admin/:id", isAuth, (req, res) => {
     console.log(req.params.id)
     eventController.findEventByAdmin(req.params.id)
         .then((result) => {
@@ -50,7 +56,7 @@ router.get("/events/admin/:id", (req, res) => {
         )
 })
 
-router.get("/events/eventid/:id", (req, res) => {
+router.get("/events/eventid/:id", isAuth, (req, res) => {
     console.log(req.params.id)
     eventController.findEventById(req.params.id).then(result => {
         console.log(result)
@@ -60,7 +66,7 @@ router.get("/events/eventid/:id", (req, res) => {
 })
 
 
-router.post("/events/id/:id", (req, res) => {
+router.post("/events/id/:id", isAuth, (req, res) => {
     console.log(req.params.id)
     console.log(req.body)
     eventController.updateEvent(req.params.id, req.body)
@@ -73,7 +79,7 @@ router.post("/events/id/:id", (req, res) => {
         })
 })
 
-router.post("/events/create", (req, res) => {
+router.post("/events/create", isAuth, (req, res) => {
     console.log(req.body)
     eventController.createEvent(req.body)
         .then((result) => {

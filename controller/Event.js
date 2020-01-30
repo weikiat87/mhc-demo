@@ -32,6 +32,8 @@ const EventController = {
   findEventByVendor: data => {
     return new Promise((resolve, reject) => {
       EventModel.find({ "vendor": data })
+      .populate('eventType','name')
+      .populate('createdBy.user','username')
         .then(result => resolve(result))
         .catch(err => reject(err));
     });

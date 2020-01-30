@@ -1,0 +1,4 @@
+{"_id":{"$oid":"5e325380d2927a4ae4f9b688"},"username":"admin1","password":"123","_type":"HRAdmin"}
+{"_id":{"$oid":"5e3253f4d2927a4ae4f9b689"},"username":"admin2","password":"123","_type":"HRAdmin"}
+{"_id":{"$oid":"5e32540bd2927a4ae4f9b68a"},"username":"vendor1","password":"123","_type":"Vendor"}
+{"_id":{"$oid":"5e325425d2927a4ae4f9b68b"},"username":"vendor2","password":"123","_type":"Vendor"}

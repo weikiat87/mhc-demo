@@ -1,10 +1,17 @@
 const express = require("express");
-const path = require('path');
+const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const routes = require('./routes');
-const helment = require('helmet');    // for security
-const session = require('express-session');
+const helment = require("helmet"); // for security
+const bodyPraser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const session = require("express-session");
+const LocalStrategy = require("passport-local").Strategy;
+const apiRoutes = require("./routes/api");
+const authRoutes = require("./routes/auth");
+
+const UserModel = require("./model/User");
 
 require("dotenv").config();
 
@@ -13,12 +20,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 //db setup
-mongoose
-  .connect(process.env.DBURI, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useFindAndModify: false
-  })
+mongoose.connect(process.env.DBURI, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useFindAndModify: false
+});
 
 // some logs to check
 mongoose.connection.on("open", function(ref) {
@@ -31,21 +37,59 @@ mongoose.connection.on("error", function(err) {
 });
 
 // middlewares setup
-app.use(cors());
+app.use(
+  cors({
+    credentials: true
+  })
+);
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyPraser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(helment());
-app.use(express.static(path.join(__dirname, 'client/build')))
 
-// for testing only
-app.get("/", (req, res) => res.send("Hello World!"));
-app.use("/api", routes);
+// express session setup
+app.use(
+  session({ secret: "project_mhc", saveUninitialized: false, resave: false })
+);
 
-// Handles any requests that don't match the ones above
-// app.get('*', (req,res) =>{
-//   console.log(req.path)
-//   res.sendFile(path.join(__dirname+'/client/build/index.html'));
-// });
+// passport setup
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(
+  new LocalStrategy((username, password, done) => {
+    UserModel.User.findOne({ username: username })
+      .exec()
+      .then(user => {
+        if (!user) return done(null, false, { message: "incorrect username" });
+        if (user.password !== password)
+          return done(null, false, { message: "incorrect password" });
+        return done(null, user);
+      })
+      .catch(err => {
+        return done(err);
+      });
+  })
+);
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  UserModel.User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+// frontend path
+app.use(express.static(path.join(__dirname, "client/build")));
+
+// setup routings
+app.use("/auth", authRoutes);
+app.use("/api", apiRoutes);
+//Handles any requests that don't match the ones above
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/client/build/index.html"));
+});
 app.listen(port, () => {
   console.log(`server started ${port}`);
 });

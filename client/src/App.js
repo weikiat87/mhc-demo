@@ -9,15 +9,11 @@ import PrivateRoute from './components/PrivateRoutes';
 import { UserContext } from "./contexts/UserContext";
 
 const App = () => {
-  const [userToken, setUserToken] = useState(null)
-  const setToken = (data) => {
-    localStorage.setItem('token', JSON.stringify(data))
-    setUserToken(data);
-  }
+  const [user, setUser] = useState(null)
 
   return (
     <div className="App">
-      <UserContext.Provider value={{ userToken, setUserToken: setToken }}>
+      <UserContext.Provider value={{ user, setUser }}>
         <Switch>
           <Route exact path="/" component={LoginPage} />
           <PrivateRoute exact path="/admin" component={AdminDashboardPage} />
