@@ -1,6 +1,6 @@
 {
   "name": "MHC_Demo",
-  "version": "1",
+  "version": "0.0.1",
   "description": "Assessment from MHC",
   "main": "server.js",
   "scripts": {
