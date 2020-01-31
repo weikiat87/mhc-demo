@@ -19,7 +19,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 //db setup
-mongoose.connect(process.env.DBURI, {
+mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useFindAndModify: false
