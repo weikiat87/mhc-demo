@@ -26,11 +26,11 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 // some logs to check
-mongoose.connection.on("open", function(ref) {
+mongoose.connection.on("open", function (ref) {
   console.log("Connected to mongo server.");
 });
 
-mongoose.connection.on("error", function(err) {
+mongoose.connection.on("error", function (err) {
   console.log("Could not connect to mongo server!");
   return console.log(err);
 });
@@ -78,16 +78,21 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-// frontend path
-app.use(express.static(path.join(__dirname, "client/build")));
-
 // setup routings
 app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
-//Handles any requests that don't match the ones above
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/build/index.html"));
-});
+
+if (process.env.NODE_ENV === 'production') {
+
+
+  // frontend path
+  app.use(express.static(path.join(__dirname, "client/build")));
+
+  //Handles any requests that don't match the ones above
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/client/build/index.html"));
+  });
+}
 app.listen(port, () => {
   console.log(`server started ${port}`);
 });
