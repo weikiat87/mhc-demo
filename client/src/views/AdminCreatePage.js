@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import DatePicker from "react-datepicker";
 import { Button, Col, Form } from "react-bootstrap";
 import { useHistory } from 'react-router-dom'
-
+import { useUser } from "../contexts/UserContext";
+// date picker plugin
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AdminCreatePage = props => {
+const AdminCreatePage = () => {
+  const { user } = useUser()
   // states for create page
   const [vendorData, setVendorData] = useState([]);
   const [dates, setDates] = useState([new Date(), new Date(), new Date()]);
@@ -40,13 +42,13 @@ const AdminCreatePage = props => {
     const form = event.currentTarget;
     let data = {
       eventType: eventType.find(item => item.name === form.EventName.value)._id,
-      user: "5e317713c85def4a244d40e6",   // TODO: need to get hr admin id
+      user: user._id,   // TODO: need to get hr admin id
       vendor: vendorData.find(item => item.username === form.VendorName.value)._id,
       proposedDate: [dates[0].toJSON(), dates[1].toJSON(), dates[2].toJSON()],
       location: form.EventLocation.value
     }
 
-    console.log( JSON.stringify(data))
+    console.log(JSON.stringify(data))
 
     event.preventDefault();
     event.stopPropagation();
@@ -58,9 +60,11 @@ const AdminCreatePage = props => {
     }).then(response => response.json())
       .then(json => { return json })
       .catch(err => console.error(err))
-      
+
     res.then(
-      result => console.log(result)
+      result => {
+        history.goBack();
+      }
     )
   }
 

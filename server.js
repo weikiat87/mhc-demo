@@ -4,7 +4,6 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const helment = require("helmet"); // for security
 const bodyPraser = require("body-parser");
-const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
@@ -44,7 +43,6 @@ app.use(
 );
 app.use(express.json());
 app.use(bodyPraser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(helment());
 
 // express session setup
