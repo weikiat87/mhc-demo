@@ -35,9 +35,12 @@ Sample fullstack project using following modules:
 - run yarn install on folder (only need for the first time)
 - run yarn dev (if have nodemon) or yarn start
 
-# Assumptions Made
-There were some confusion when I read the document. e.g. Who auto populate Comany Name (but there's no reference on Company Name on Company HR Admin)
+# ERD Diagram
+![ERD Diagram](/IMGS/mhc_erd.png)
 
+# Assumptions Made
+
+There were some confusion when I read the document. e.g. Who auto populate Comany Name (but there's no reference on Company Name on Company HR Admin)
 
 User Types:
 - HR Admin
